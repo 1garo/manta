@@ -20,15 +20,16 @@ func main() {
     app.Get("/players/:steam32ID", func(c *fiber.Ctx) error {
         log.Info("[GET /players/:steam32ID]")
 
-        playerID, err := strconv.Atoi(c.Params("steam32ID"))
+        id := c.Params("steam32ID")
+        playerID, err := strconv.Atoi(id)
         if err != nil {
             e := Err{
-                Message: "cannot parse /players/:steam32ID query param",
+                Message: fmt.Sprintf("expect a int, received: %s", id),
             }
             return c.Status(fiber.StatusBadRequest).JSON(e)
         }
 
-        resp, err := http.Get(fmt.Sprintf("https://api.opendota.com/api/%d", playerID))
+        resp, err := http.Get(fmt.Sprintf("https://api.opendota.com/api/players/%d", playerID))
         if err != nil {
             return c.Status(fiber.StatusBadRequest).SendString(err.Error())
         }
@@ -39,6 +40,8 @@ func main() {
             }
             return c.Status(resp.StatusCode).JSON(err)
         }
+
+        // TODO: chech if resp.body.profile exists, if not throw a error
 
         var p interface{}
 
