@@ -1,4 +1,4 @@
-package manta_test
+package scheduler_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestManta(t *testing.T) {
+func TestScheduler(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Manta Suite")
+	RunSpecs(t, "Scheduler Suite")
 }

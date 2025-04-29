@@ -1,17 +1,17 @@
 package job
 
-
-type Job struct{
+type Job struct {
 	Name string
-	Exec func () error 
+	exec func() error
 }
-func NewJob(name string, exec func() error) *Job {
+
+func NewJob(name string, f func() error) *Job {
 	return &Job{
 		Name: name,
-		Exec: exec,
+		exec: f,
 	}
 }
 
 func (j *Job) Execute() error {
-	return j.Exec()
+	return j.exec()
 }

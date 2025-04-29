@@ -17,7 +17,7 @@ var _ = Describe("Job", func() {
 		job := NewJob("PrintHelloWorld", handlePrintHelloWorld)
 		Context("when input is valid", func() {
 			It("should print the message", func() {
-				err := job.Exec()
+				err := job.Execute()
 				Expect(err).ShouldNot(HaveOccurred())
 			})
 		})

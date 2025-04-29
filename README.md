@@ -1,20 +1,42 @@
 # Manta
-Your favorite job scheduler
+Your favorite job scheduler.
 
 ## Job Scheduler with Plugin Adapters
-Goal: Build a scheduler that runs different job types (e.g., HTTP calls, shell commands) concurrently.
+Goal: Build a scheduler that runs jobs instantaneously or schedule it.
 
-Concurrency Focus:
-- Manage job execution with goroutines and track progress using channels.
-- Use `context.Context` for cancellations/timeouts.
 
-Adapter Pattern:
-- Define a Job interface and adapters for specific job types:
-```go
-type Job interface {
-  Execute() error
+``go
+package main
+
+import (
+	"log"
+
+	"github.com/1garo/manta/job"
+	"github.com/1garo/manta/scheduler"
+)
+
+func main() {
+	sc := scheduler.NewScheduler()
+    log.Printf("queue length: %d", sc.Len())
+
+	jobName := "HelloWorld"
+	job := job.NewJob(jobName, func() error {
+        log.Println("Hello World!")
+        return nil
+    })
+
+	sc.AddJob(job)
+    log.Printf("queue length before getting job: %d", sc.Len())
+
+    j, ok := sc.Get(jobName)
+    log.Printf("queue length after getting job: %d", sc.Len())
+    if !ok {
+        log.Fatal("job not found")
+    }
+
+	err := j.Execute()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
-
-type HTTPJob struct { URL string } // Implements Execute()
-type ShellJob struct { Command string } // Implements Execute()
-```
+``
