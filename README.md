@@ -5,7 +5,7 @@ Your favorite job scheduler.
 Goal: Build a scheduler that runs jobs instantaneously or schedule it.
 
 
-``go
+```go
 package main
 
 import (
@@ -39,4 +39,4 @@ func main() {
 		log.Fatal(err)
 	}
 }
-``
+```
