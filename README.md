@@ -19,8 +19,8 @@ func main() {
     sc := scheduler.NewScheduler()
     log.Printf("queue length: %d", sc.Len())
 
-	jobName := "HelloWorld"
-	job := job.NewJob(jobName, func() error {
+    jobName := "HelloWorld"
+    job := job.NewJob(jobName, func() error {
         log.Println("Hello World!")
         return nil
     })
