@@ -1,9 +1,10 @@
 # Manta
 Your favorite job scheduler.
 
-## Job Scheduler with Plugin Adapters
+## Job Scheduler 
 Goal: Build a scheduler that runs jobs instantaneously or schedule it.
 
+### Example
 
 ```go
 package main
