@@ -45,3 +45,13 @@ func (s *Scheduler) Peek(name string) bool {
 	}
 	return true
 }
+
+// Bootstrap will assign multiple jobs to the scheduler.
+//
+// TODO: what if we had a function that would improve users's developer experience.
+// I am thinking of a function that will call scheduler.AddJob() for multiple jobs.
+//
+// I believe that this could be a user need at some point. Lets say that I want to call this at my init function
+// so I am not manually calling the scheduler.AddJob() a bunch of times.
+func (s *Scheduler) Bootstrap(jobs []job.Job) {}
+
