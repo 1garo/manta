@@ -16,7 +16,7 @@ import (
 )
 
 func main() {
-	sc := scheduler.NewScheduler()
+    sc := scheduler.NewScheduler()
     log.Printf("queue length: %d", sc.Len())
 
 	jobName := "HelloWorld"
@@ -25,7 +25,7 @@ func main() {
         return nil
     })
 
-	sc.AddJob(job)
+    sc.AddJob(job)
     log.Printf("queue length before getting job: %d", sc.Len())
 
     j, ok := sc.Get(jobName)
@@ -34,9 +34,9 @@ func main() {
         log.Fatal("job not found")
     }
 
-	err := j.Execute()
-	if err != nil {
-		log.Fatal(err)
-	}
+    err := j.Execute()
+    if err != nil {
+        log.Fatal(err)
+    }
 }
 ```
