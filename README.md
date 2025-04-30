@@ -1,8 +1,8 @@
 # Manta
-Your favorite job scheduler.
+Your favorite job runner.
 
-## Job Scheduler 
-Goal: Build a scheduler that runs jobs instantaneously or schedule it.
+## Job Runner
+Goal: Build a service that runs jobs instantaneously and concurrently.
 
 ### Example
 
@@ -13,31 +13,30 @@ import (
 	"log"
 
 	"github.com/1garo/manta/job"
-	"github.com/1garo/manta/scheduler"
+	"github.com/1garo/manta/runner"
 )
 
 func main() {
-    sc := scheduler.NewScheduler()
-    log.Printf("queue length: %d", sc.Len())
+	sc := runner.NewRunner()
 
-    jobName := "HelloWorld"
-    job := job.NewJob(jobName, func() error {
-        log.Println("Hello World!")
-        return nil
-    })
+	log.Printf("queue length: %d", sc.Len())
 
-    sc.AddJob(job)
-    log.Printf("queue length before getting job: %d", sc.Len())
+	jobName := "HelloWorld"
+	job := job.NewJob(jobName, func() error {
+		log.Println("Hello World!")
+		return nil
+	})
 
-    j, ok := sc.Get(jobName)
-    log.Printf("queue length after getting job: %d", sc.Len())
-    if !ok {
-        log.Fatal("job not found")
-    }
-
-    err := j.Execute()
-    if err != nil {
-        log.Fatal(err)
-    }
+	sc.AddJob(job)
+	log.Printf("queue length before getting job: %d", sc.Len())
+	j, ok := sc.Get(jobName)
+	log.Printf("queue length after getting job: %d", sc.Len())
+	if !ok {
+		log.Fatal("job not found")
+	}
+	err := j.Execute()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```

@@ -1,4 +1,4 @@
-package scheduler
+package runner
 
 import (
 	"fmt"
@@ -8,8 +8,8 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Scheduler", func() {
-	var sc *Scheduler
+var _ = Describe("Runner", func() {
+	var sc *Runner
 	var j *job.Job
 	var jobName = "Hello world"
 
@@ -19,19 +19,19 @@ var _ = Describe("Scheduler", func() {
 	}
 
 	BeforeEach(func() {
-		sc = NewScheduler()
+		sc = NewRunner()
 		j = job.NewJob(jobName, jobFn)
 	})
 
-	Describe("Creating a new scheduler", func() {
-		Context("when scheduler is created correctly", func() {
-			It("scheduler job lenght should be zero", func() {
+	Describe("Creating a new runner", func() {
+		Context("when runner is created correctly", func() {
+			It("runner job lenght should be zero", func() {
 				count := sc.Len()
 				Expect(count).To(Equal(0))
 			})
 		})
 		Context("when a new job is added", func() {
-			It("scheduler job lenght should be one", func() {
+			It("runner job lenght should be one", func() {
 				sc.AddJob(j)
 				count := sc.Len()
 				Expect(count).To(Equal(1))
@@ -39,7 +39,7 @@ var _ = Describe("Scheduler", func() {
 		})
 	})
 
-	Describe("Getting a job from a scheduler", func() {
+	Describe("Getting a job from a runner", func() {
 		Context("when checking if a job exists", func() {
 			It("should not found job", func() {
 				job, ok := sc.Get("invalidName")
@@ -61,8 +61,8 @@ var _ = Describe("Scheduler", func() {
 		})
 	})
 
-	Describe("Bootstraping the scheduler", func() {
-		Context("Calling bootstrap to add the jobs to scheduler", func() {
+	Describe("Bootstraping the runner", func() {
+		Context("Calling bootstrap to add the jobs to runner", func() {
 			It("Should create all the jobs correctly", func() {
 				jobs := make(map[string]job.Fn, 0)
 				jobs["firstJob"] = jobFn

@@ -4,11 +4,11 @@ import (
 	"log"
 
 	"github.com/1garo/manta/job"
-	"github.com/1garo/manta/scheduler"
+	"github.com/1garo/manta/runner"
 )
 
 func main() {
-	sc := scheduler.NewScheduler()
+	sc := runner.NewRunner()
 
 	log.Printf("queue length: %d", sc.Len())
 
