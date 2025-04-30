@@ -7,6 +7,7 @@ type Fn = func() error
 type Job struct {
 	Name string // Human-readable identifier for the job
 	exec Fn    // Function to execute when running the job
+	// TODO: what if we have something similar to crontab schedule?
 }
 
 // NewJob creates a new Job instance
