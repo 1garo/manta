@@ -1,6 +1,8 @@
 package job
 
 // Fn represents an executable function that returns an error
+// TODO: At some point, we could want a mutex if we have a ctx passing.
+// Or we decide that either you schedule or use .Execute().
 type Fn = func() error
 
 // Job represents a named executable task
