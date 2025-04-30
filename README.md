@@ -40,3 +40,9 @@ func main() {
 	}
 }
 ```
+
+### Installation
+
+- Run `go mod init github.com/<your-user>/<your-repo>`.
+- Add the example content into `main.go` file.
+- Run `go mod tidy`.
