@@ -2,34 +2,34 @@ package scheduler
 
 import "github.com/1garo/manta/job"
 
+// Scheduler represents the container for the jobs.
 type Scheduler struct {
 	jobs map[string]*job.Job
 }
 
 
+// NewScheduler create a new scheduler instance.
 func NewScheduler() *Scheduler {
 	return &Scheduler{
 		jobs: make(map[string]*job.Job, 0),
 	}
 }
 
+// AddJob add a job to the current scheduler.
 func (s *Scheduler) AddJob(job *job.Job) error {
 	s.jobs[job.Name] = job
 	return nil
 }
 
+// Len get the length of the current scheduler.
 func (s *Scheduler) Len() int {
 	return len(s.jobs)
 }
 
-// Get will pop the job from the queue, if found, and return the job and true.
+// Get will if the jobs exists, pop from the queue.
 //
-// If not, it will return nil and false.
+// If not, it will returns nil and false.
 func (s *Scheduler) Get(name string) (*job.Job, bool){
-	// TODO: maybe we want double-linked lists here?
-	// so we can get and remove the job from the queue on O(1) operation?
-	// the idea is that when you get the value, you are gonna pop if from the queue to execute
-	// if you want just to see if the job exists, you can use Peek
 	job, ok := s.jobs[name]
 	if !ok {
 		return nil, false
@@ -39,19 +39,19 @@ func (s *Scheduler) Get(name string) (*job.Job, bool){
 	return job, ok
 }
 
-func (s *Scheduler) Peek(name string) bool {
-	if _, ok := s.jobs[name]; !ok {
+// Peek take a look if the job is in the scheduler queue.
+func (s *Scheduler) Peek(jobName string) bool {
+	if _, ok := s.jobs[jobName]; !ok {
 		return false
 	}
 	return true
 }
 
 // Bootstrap will assign multiple jobs to the scheduler.
-//
-// TODO: what if we had a function that would improve users's developer experience.
-// I am thinking of a function that will call scheduler.AddJob() for multiple jobs.
-//
-// I believe that this could be a user need at some point. Lets say that I want to call this at my init function
-// so I am not manually calling the scheduler.AddJob() a bunch of times.
-func (s *Scheduler) Bootstrap(jobs []job.Job) {}
+func (s *Scheduler) Bootstrap(jobs map[string]job.Fn) {
+	for name, f := range jobs {
+		job := job.NewJob(name, f)
+		s.jobs[name] = job
+	}
+}
 
