@@ -3,22 +3,22 @@ package main
 import (
 	"log"
 
-	"github.com/1garo/manta/job"
+	"github.com/1garo/manta/task"
 	"github.com/1garo/manta/runner"
 )
 
 func main() {
 	sc := runner.NewRunner()
 
-	log.Printf("queue length: %d", sc.Len())
+	log.Printf("runner size: %d", sc.Len())
 
 	jobName := "HelloWorld"
-	job := job.NewJob(jobName, func() error {
+	job := task.NewTask(jobName, func() error {
 		log.Println("Hello World!")
 		return nil
 	})
 
-	sc.AddJob(job)
+	sc.AddTask(job)
 	log.Printf("queue length before getting job: %d", sc.Len())
 	j, ok := sc.Get(jobName)
 	log.Printf("queue length after getting job: %d", sc.Len())

@@ -3,75 +3,74 @@ package runner
 import (
 	"fmt"
 
-	"github.com/1garo/manta/job"
+	"github.com/1garo/manta/task"
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("Runner", func() {
 	var sc *Runner
-	var j *job.Job
-	var jobName = "Hello world"
+	var j *task.Task
 
-	var jobFn = func() error {
+	var taskName = "hello"
+	var successFn = func() error {
 		fmt.Println("hello world")
 		return nil
 	}
+	var failedFn = func() error {
+		return fmt.Errorf("this function failed")
+	}
+
 
 	BeforeEach(func() {
 		sc = NewRunner()
-		j = job.NewJob(jobName, jobFn)
+		j = task.NewTask(taskName)
 	})
 
 	Describe("Creating a new runner", func() {
 		Context("when runner is created correctly", func() {
-			It("runner job lenght should be zero", func() {
+			It("runner lenght should be zero", func() {
 				count := sc.Len()
 				Expect(count).To(Equal(0))
 			})
 		})
-		Context("when a new job is added", func() {
-			It("runner job lenght should be one", func() {
-				sc.AddJob(j)
-				count := sc.Len()
-				Expect(count).To(Equal(1))
+		Context("when a new task is created", func() {
+			It("runner should be one", func() {
+				sc.AddTask(j)
+				Expect(sc.Len()).To(Equal(1))
 			})
 		})
-	})
 
-	Describe("Getting a job from a runner", func() {
-		Context("when checking if a job exists", func() {
-			It("should not found job", func() {
-				job, ok := sc.Get("invalidName")
-				Expect(ok).To(Equal(false))
-				Expect(job).To(BeNil())
+		Context("when a step that succeed is added to the task", func() {
+			It("task size should be one", func() {
+				s := task.NewStep("print hello world", successFn)
+				j.AddStep(s)
+				Expect(j.Size()).To(Equal(1))
 			})
 
-			It("should found job named HelloWorld", func() {
-				sc.AddJob(j)
-				prevLen := sc.Len()
-
-				job, ok := sc.Get(jobName)
-				Expect(ok).To(Equal(true))
-				Expect(job).ToNot(BeNil())
-
-				currLen := sc.Len()
-				Expect(currLen).To(Equal(prevLen - 1))
+			It("task should be runned and steps executed", func() {
+				s := task.NewStep("print hello world", successFn)
+				j.AddStep(s)
+				Expect(j.Size()).To(Equal(1))
+				err := j.Run()
+				Expect(err).ToNot(HaveOccurred())
 			})
 		})
-	})
 
-	Describe("Bootstraping the runner", func() {
-		Context("Calling bootstrap to add the jobs to runner", func() {
-			It("Should create all the jobs correctly", func() {
-				jobs := make(map[string]job.Fn, 0)
-				jobs["firstJob"] = jobFn
-				jobs["secondJob"] = jobFn
-				Expect(sc.Len()).To(Equal(0))
-				sc.Bootstrap(jobs)
-				Expect(sc.Len()).To(Equal(2))
+		Context("when a step that fail is added to the task", func() {
+			It("task size should be one", func() {
+				s := task.NewStep("fail step", failedFn)
+				j.AddStep(s)
+				Expect(j.Size()).To(Equal(1))
 			})
 
+			It("task should be runned and steps execute but fail", func() {
+				s := task.NewStep("fail step", failedFn)
+				j.AddStep(s)
+				Expect(j.Size()).To(Equal(1))
+				err := j.Run()
+				Expect(err).To(HaveOccurred())
+			})
 		})
 	})
 })
