@@ -35,3 +35,7 @@ func (t *Task) Run() error {
 func (t *Task) Failed() bool {
 	return t.failed
 }
+
+// TODO: The following could be useful for the idea of having the multiple tasks 
+// (chatgpt helped)
+//func (t *Task) RunWithDeps() error {}
