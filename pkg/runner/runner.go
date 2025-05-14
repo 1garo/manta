@@ -1,41 +1,27 @@
 package runner
 
-import "log"
+import "github.com/1garo/manta/pkg/task"
 
-type Runner struct {}
-
-type Task struct {
-	name string
-	fn func() error
-	failed bool
+type Runner struct {
+	tasks []task.Task
 }
 
-func New() *Runner{
-	return &Runner{}
-}
-
-func (r *Runner) Task(name string, fn func() error) Task {
-	return Task{
-		name: name,
-		fn: fn,
-		failed: false,
+func New(tasks []task.Task) *Runner{
+	return &Runner{
+		tasks,
 	}
 }
 
-func (t *Task) Run() error {
-	log.Printf("running the following task: %s\n", t.name)
-	if err := t.fn(); err != nil {
-		t.failed = true
-		return nil
+func (r *Runner) Execute() (map[string]error, bool){
+	errs := make(map[string]error)
+	for _, t := range r.tasks {
+		if err := t.Run(); err != nil {
+			errs[t.Name] = err
+		}
 	}
 
-	return nil
+	if len(errs) > 0 {
+		return errs, false
+	}
+	return errs, true
 }
-
-func (t *Task) Failed() bool {
-	return t.failed
-}
-
-// TODO: The following could be useful for the idea of having the multiple tasks 
-// (chatgpt helped)
-//func (t *Task) RunWithDeps() error {}

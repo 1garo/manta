@@ -1,33 +1,28 @@
 package runner_test
 
 import (
-	"testing"
 	"fmt"
+	"testing"
+
 	"github.com/1garo/manta/pkg/runner"
+	"github.com/1garo/manta/pkg/task"
 )
 
-func TestRunSingleTask(t *testing.T) {
-	r := runner.New()
-
+func TestRunner(t *testing.T) {
 	taskName := "countNumber"
-	task := r.Task(taskName, func () error {
+	taskFn := func () error {
 		count := 0
 		for _, n := range []int{1,2,3,4} {
 			count += n
 		}
 		fmt.Println("count: ", count)
 		return nil
-	})
-
-	err := task.Run()
-
-	if err != nil {
-		t.Fatalf("expected no error, but got %v", err)
 	}
+	tk := task.NewTask(taskName, taskFn)
 
-	if task.Failed() {
-		t.Fatalf("expected '%s' task to be executed", taskName)
+	r := runner.New([]task.Task{tk})
+	if _, ok := r.Execute(); !ok {
+		t.Fatalf("expected %v, got %v", true, ok)
 	}
-
 
 }
